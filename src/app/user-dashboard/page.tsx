@@ -2,10 +2,13 @@ import { getUserByEmail, getUserWithTotalVoters } from "@/action/user";
 import { authOptions } from "@/lib/authOption";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
 async function page() {
   const session = await getServerSession(authOptions);
+  if (!session?.user) redirect("/login");
+  
   const email = session && session.user?.email;
 
   const user = email && (await getUserByEmail(email));

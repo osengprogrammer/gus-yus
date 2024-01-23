@@ -9,13 +9,10 @@ import { getUserByEmail } from "@/action/user";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  const user = await getUserByEmail(session.user.email)
-  
   if (!session?.user) redirect("/login");
   // if(session?.user?.role!=="admin")redirect("/user-dashboard");
-  console.log(user,"^^^^^^^^^^^^")
-
-  console.log("*****", user.role,"********")
+ 
+  const user = await getUserByEmail(session.user.email)
   if (user.role!=="admin") redirect("/user-dashboard");
   return (
     <main className="flex min-h-screen items-center justify-between w-full bg-red-300">

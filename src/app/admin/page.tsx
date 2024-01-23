@@ -8,7 +8,8 @@ import { columns } from "@/components/DataTable/Column";
 
 const AdminPage = async () => {
   const session:any = await getServerSession(authOptions);
-
+  if (!session?.user) redirect("/login");
+  
   let  voters = null
   const user = await getUserByEmail(session?.user.email)
   if(user?.role =="user"){
