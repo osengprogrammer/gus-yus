@@ -1,7 +1,6 @@
 // @ts-nocheck
 
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -47,17 +46,22 @@ const VisitorForm = ({
   const { errors } = formState;
   const { toast } = useToast();
 
+  console.log(email,"okemail")
   const onSubmit = async (data: FormValues) => {
     try {
       setLoading(true);
       let newData = { ...data, email };
+      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+      console.log(newData)
       await insertVoter(newData);
       toast({
         title: "Member Added Succesfully.",
       });
-      reset(); // Reset the form
+    
       router.push("/admin")
       router.refresh();
+      setLoading(false);
+      reset();
     } catch (error) {
       console.error("Error submitting data:", error);
       // toast.error("Error submitting data. Please try again."); // Show error toast

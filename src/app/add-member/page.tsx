@@ -3,16 +3,16 @@ import { getServerSession } from "next-auth";
 import React from "react";
 import { authOptions } from "@/lib/authOption";
 import VisitorForm from "@/components/NewForm/Visitior";
-import { getUserByEmail } from "@/action/user";
+
 
 const ProfilePage = async () => {
   const session = await getServerSession(authOptions);
-  const userId = await getUserByEmail(session?.user?.email)
+  const email = session?.user?.email
 
-  console.log(userId)
+  console.log(email)
   return (
     <div className="flex items-center justify-center">
-      <VisitorForm  email ={userId?.email}/>
+      {email&&<VisitorForm  email ={session?.user.email}/>}
     </div>
   );
 };

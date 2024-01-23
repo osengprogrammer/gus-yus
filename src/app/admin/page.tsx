@@ -11,14 +11,11 @@ const AdminPage = async () => {
 
   let  voters = null
   const user = await getUserByEmail(session?.user.email)
-
-  console.log(user[0].email)
-
-  if(user[0]?.role =="user"){
+  if(user?.role =="user"){
      voters = await getAllVotersByEmail(session?.user.email)
   }
 
-  if(user[0]?.role =="admin"){
+  if(user?.role =="admin"){
     voters = await getAllVoters()
  }
   return (

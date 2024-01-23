@@ -2,10 +2,9 @@
 import prisma from "@/lib/prisma";
 import { getSession } from "next-auth/react";
 
-
 export async function getUserByEmail(email: string) {
   try {
-    const user = await prisma.user.findMany({
+    const user = await prisma.user.findUnique({
       where: {
         email: email,
       },
@@ -36,8 +35,12 @@ export const votersForUser = async (x: string) => {
 
 export async function getAllVoters() {
   try {
-    const allVoters = await prisma.voters.findMany();
-    console.log("All Voters:", allVoters);
+    const allVoters = await prisma.voters.findMany({
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+
     return allVoters;
   } catch (error) {
     console.error("Error fetching all voters:", error);
@@ -65,7 +68,6 @@ export async function deleteVoter(voterId: string) {
       },
     });
 
-    console.log("Deleted Voter:", deletedVoter);
     return deletedVoter;
   } catch (error) {
     console.error("Error deleting voter:", error);
@@ -92,8 +94,6 @@ export async function updateVoter(voterId: string, data: any) {
       },
     });
 
- 
-    
     return updatedVoter;
   } catch (error) {
     console.error("Error updating voter:", error);
@@ -111,7 +111,6 @@ export async function getVoterById(voterId: string) {
       },
     });
 
-    console.log("Voter:", voter);
     return voter;
   } catch (error) {
     console.error("Error fetching voter by ID:", error);
@@ -128,20 +127,15 @@ export async function getAllVotersByEmail(email: string) {
       },
     });
 
-    console.log('All Voters for Email:', voters);
     return voters;
   } catch (error) {
-    console.error('Error fetching voters by email:', error);
+    console.error("Error fetching voters by email:", error);
     throw error;
   }
 }
 
-
-
-
 export async function insertVoter(data: any) {
   try {
-    console.log(data);
     const createdVoter = await prisma.voters.create({
       data: {
         nama: data.nama,
@@ -163,7 +157,7 @@ export async function insertVoter(data: any) {
 export async function getAllUsers() {
   try {
     const allUsers = await prisma.user.findMany();
-    console.log("All Users:", allUsers);
+
     return allUsers;
   } catch (error) {
     console.error("Error fetching all users:", error);
@@ -173,21 +167,52 @@ export async function getAllUsers() {
   }
 }
 
-
-
-
 export const getTotalVoters = async (): Promise<number> => {
   try {
     const totalVoters = await prisma.voters.count();
-    console.log('Total Voters:', totalVoters);
+
     return totalVoters;
   } catch (error) {
-    console.error('Error getting total voters:', error);
+    console.error("Error getting total voters:", error);
     throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
+
+export async function getUserWithTotalVoters(userEmail:string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail,
+      },
+      include: {
+        voters: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error(`User with ID ${userEmail} not found`);
+    }
+
+    // Calculate total voters for the user
+    const totalVoters = user.voters.length;
+
+    // Create a new object with the totalVoters property
+    const userWithTotalVoters = {
+      ...user,
+      totalVoters,
+    };
+
+    return userWithTotalVoters;
+  } catch (error) {
+    console.error(`Error fetching user with total voters for ID ${userEmail}:`, error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 
 
 export async function getAllUsersWithTotalVoters() {
@@ -207,7 +232,6 @@ export async function getAllUsersWithTotalVoters() {
       };
     });
 
-    console.log("All Users with Total Voters:", usersWithTotalVoters);
     return usersWithTotalVoters;
   } catch (error) {
     console.error("Error fetching all users with total voters:", error);
@@ -234,7 +258,6 @@ export async function getVotersByUserId(userId: string) {
 
     const voters = userWithVoters.voters;
 
-    console.log(`Voters for user ${userId}:`, voters);
     return voters;
   } catch (error) {
     console.error(`Error fetching voters for user ${userId}:`, error);
@@ -243,4 +266,3 @@ export async function getVotersByUserId(userId: string) {
     await prisma.$disconnect();
   }
 }
-

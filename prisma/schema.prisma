@@ -68,5 +68,7 @@ model Voters {
   nik String
   hp String
   user         User     @relation(fields: [email], references: [email], onDelete: Cascade)
+  created_at    DateTime?  @default(now()) @map("created_at") // Add this line
+  edited_at     DateTime? @map("edited_at")                 // Add this line
 }
 
