@@ -188,3 +188,59 @@ export const getTotalVoters = async (): Promise<number> => {
     await prisma.$disconnect();
   }
 };
+
+
+export async function getAllUsersWithTotalVoters() {
+  try {
+    const allUsers = await prisma.user.findMany({
+      include: {
+        voters: true,
+      },
+    });
+
+    // Calculate total voters for each user
+    const usersWithTotalVoters = allUsers.map((user) => {
+      const totalVoters = user.voters.length;
+      return {
+        ...user,
+        totalVoters,
+      };
+    });
+
+    console.log("All Users with Total Voters:", usersWithTotalVoters);
+    return usersWithTotalVoters;
+  } catch (error) {
+    console.error("Error fetching all users with total voters:", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function getVotersByUserId(userId: string) {
+  try {
+    const userWithVoters = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        voters: true,
+      },
+    });
+
+    if (!userWithVoters) {
+      throw new Error(`User with id ${userId} not found.`);
+    }
+
+    const voters = userWithVoters.voters;
+
+    console.log(`Voters for user ${userId}:`, voters);
+    return voters;
+  } catch (error) {
+    console.error(`Error fetching voters for user ${userId}:`, error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+

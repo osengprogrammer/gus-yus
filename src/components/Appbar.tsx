@@ -1,21 +1,23 @@
 import Link from "next/link";
 import React from "react";
 import SigninButton from "./SigninButton";
+import { FileSliders, Home, MessageSquarePlus } from "lucide-react";
 
 const AppBar = () => {
   return (
-    <header className="sticky top-0 z-50  flex items-center justify-between p-4 bg-gradient-to-b from-green-500 to-green-700 shadow-md">
+    <header className="sticky top-0 z-50  flex items-center justify-between  bg-gradient-to-b from-green-500 to-green-700 shadow-md w-full h-20">
       <div className="flex items-center gap-4">
-        <Link href="/" className="text-white text-xl font-semibold hover:text-blue-200 transition-colors"> Home
+        <Link href="/" className="text-white text-xl font-semibold hover:text-blue-200 transition-colors"> 
+        <Home />
         </Link>
       </div>
       
       <div className="flex items-center gap-4">
         <Link href="/admin" className="text-white hover:text-blue-200 transition-colors">
-          Admin
+        <FileSliders />
         </Link>
         <Link href="/add-member" className="text-white hover:text-blue-200 transition-colors">
-          Add Member
+        <MessageSquarePlus />
         </Link>
         <SigninButton />
       </div>
