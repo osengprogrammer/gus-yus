@@ -25,7 +25,7 @@ async function page({params}:PageProps) {
   
   
   return (
-    <div className="flex items-center justify-center w-full mx-auto">
+    <div className="">
 
       {voterOfAdmin&&<DataTable data={voterOfAdmin} columns={columns}/>}
       
