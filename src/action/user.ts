@@ -172,3 +172,19 @@ export async function getAllUsers() {
     await prisma.$disconnect();
   }
 }
+
+
+
+
+export const getTotalVoters = async (): Promise<number> => {
+  try {
+    const totalVoters = await prisma.voters.count();
+    console.log('Total Voters:', totalVoters);
+    return totalVoters;
+  } catch (error) {
+    console.error('Error getting total voters:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
