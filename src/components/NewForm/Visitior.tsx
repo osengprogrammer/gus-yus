@@ -104,7 +104,7 @@ const VisitorForm = ({
             {...register("kecamatan")}
             className="border rounded py-2 px-3 w-full focus:outline-none focus:border-blue-500"
           >
-            <option value="Serono">Serono</option>
+            <option value="Srono">Serono</option>
             <option value="Kecamatan">Kecamatan</option>
             <option value="Blimbingsari">Blimbingsari</option>
             <option value="Muncar">Muncar</option>
